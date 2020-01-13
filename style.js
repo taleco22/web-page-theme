@@ -1,6 +1,6 @@
-// set true for console output, this may cause performance issues
-const debug = true;
-const log = (...params) => (debug ? console.log(...params) : {});
+// set true for console output, obs: this may cause performance issues
+const debug = false;
+const log = (...args) => (debug ? console.log(...args) : {});
 
 //  All DOM here
 const menuBtn = document.querySelector(".menu-btn");
@@ -13,40 +13,39 @@ const chocoImage = document.getElementById("break");
 const isMobile = innerWidth < 700;
 const isPc = innerWidth >= 700;
 
+let isActive = false;
+
 //0. tldr; this happens
 window.onload = () => {
   document.body.setAttribute("data-theme", "light");
+
   document.getElementById("switchCheckbox1").addEventListener("input", function(event) {
-    event.target.checked ? document.body.setAttribute("data-theme", "dark") : document.body.setAttribute("data-theme", "light");
+    event.target.checked
+      ? document.body.setAttribute("data-theme", "dark")
+      : document.body.setAttribute("data-theme", "light");
   });
+
   if (isMobile) nav.setAttribute("aria-hidden", true);
-  onHamburguerClick();
-  onPageClick();
-  listenScroll();
+
+  menuBtn.addEventListener("click", (e) => onHamburguerClick(e));
+  page.addEventListener("click", onPageClick);
+  window.addEventListener("scroll", handleScroll);
+  window.addEventListener("resize", handleResize);
 };
-window.addEventListener("resize", () => {
-  if (isPc) {
-    menuBtn.classList.remove("open");
-    nav.removeAttribute("aria-hidden");
-    nav.classList.remove("active");
-    page.classList.remove("active");
-  } else {
-    nav.setAttribute("aria-hidden", true);
-  }
-});
+
+function handleResize() {
+  return isPc & isActive ? animateNav() : {};
+}
 
 //1. Basically where code starts
 
 //  Open nav
-function onHamburguerClick() {
-  menuBtn.addEventListener("click", (e) => {
-    log("hamburguer clicked");
-    e.stopImmediatePropagation();
-    animateNav();
-  });
+function onHamburguerClick(e) {
+  log("hamburguer clicked");
+  e.stopImmediatePropagation();
+  animateNav();
 }
 
-let isActive = false;
 // Enable or Disable Nav, moving all together
 function animateNav() {
   isActive = !isActive;
@@ -61,20 +60,14 @@ function animateNav() {
 
 //  This disables nav too
 function onPageClick() {
-  page.addEventListener("click", () => {
-    log("pageClicked");
-    isActive && animateNav();
-  });
+  return isActive ? log("pageClicked") & animateNav() : {};
 }
 
 //  Menu bar hide up or show down on smooth effect (via css)
 let lastScroll = 80;
-function listenScroll() {
-  window.addEventListener("scroll", () => {
-    if (isMobile) changeMenuAnimation(window);
-
-    parallaxChocolateImage(window, chocoImage);
-  });
+function handleScroll() {
+  if (isMobile) changeMenuAnimation(window);
+  parallaxChocolateImage(window, chocoImage);
 }
 
 function changeMenuAnimation({pageYOffset}) {
@@ -98,7 +91,7 @@ function hideMenu() {
   menu.classList.add("disabled");
 }
 
-function parallaxChocolateImage({pageYOffset}, {offsetTop, style}) {
+function parallaxChocolateImage({pageYOffset, innerHeight}, {offsetTop, style}) {
   const halfScreenSize = innerHeight / 2;
   // Added so parallax inits at half screen, not on top
   const position = pageYOffset + halfScreenSize;
@@ -108,6 +101,9 @@ function parallaxChocolateImage({pageYOffset}, {offsetTop, style}) {
     const speed = (position - offsetTop) * 0.28;
     const from100To15 = 100 - speed;
 
-    from100To15 >= 15 ? (style.backgroundPositionY = `${from100To15}%`) && log({from100To15, position, offsetTop, speed, style}) : {};
+    from100To15 >= 15
+      ? (style.backgroundPositionY = `${from100To15}%`) &
+        log({from100To15, position, offsetTop, speed, style})
+      : {};
   }
 }
