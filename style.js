@@ -83,12 +83,10 @@ function changeMenuAnimation({pageYOffset}) {
 function showMenu() {
   log("menu showing");
   menu.classList.add("fixed");
-  menu.classList.remove("disabled");
 }
 function hideMenu() {
   log("menu hiding");
   menu.classList.remove("fixed");
-  menu.classList.add("disabled");
 }
 
 function parallaxChocolateImage({pageYOffset, innerHeight}, {offsetTop, style}) {
