@@ -19,7 +19,7 @@ let isActive = false;
 window.onload = () => {
   document.body.setAttribute("data-theme", "light");
 
-  document.getElementById("switchCheckbox1").addEventListener("input", function (event) {
+  document.getElementById("switchCheckbox1").addEventListener("input", function(event) {
     event.target.checked
       ? document.body.setAttribute("data-theme", "dark")
       : document.body.setAttribute("data-theme", "light");
@@ -36,9 +36,9 @@ window.onload = () => {
 function handleResize() {
   if (isPc) {
     nav.classList.remove("active");
-    menuBtn.classList.remove('open');
-    page.classList.remove('active');
-    nav.setAttribute("aria-hidden", false)
+    menuBtn.classList.remove("open");
+    page.classList.remove("active");
+    nav.setAttribute("aria-hidden", false);
   }
 }
 
@@ -60,17 +60,16 @@ function animateNav() {
   nav.classList.toggle("active");
 
   page.classList.toggle("active");
-  log({ menuBtn, nav, page });
+  log({menuBtn, nav, page});
 }
 
 //  This disables nav too
 function onPageClick() {
   if (isActive) {
     log("pageClicked");
-    animateNav()
+    animateNav();
   }
 }
-
 
 //  Menu bar hide up or show down on smooth effect (via css)
 let lastScroll = 80;
@@ -79,7 +78,7 @@ function handleScroll() {
   parallaxChocolateImage(window, chocoImage);
 }
 
-function changeMenuAnimation({ pageYOffset }) {
+function changeMenuAnimation({pageYOffset}) {
   const currentScroll = pageYOffset;
   const scrollUp = currentScroll < lastScroll;
   if (scrollUp) {
@@ -98,9 +97,7 @@ function hideMenu() {
   menu.classList.remove("fixed");
 }
 
-function parallaxChocolateImage({ pageYOffset, innerHeight }, { offsetTop, style }) {
-
-
+function parallaxChocolateImage({pageYOffset, innerHeight}, {offsetTop, style}) {
   const position = pageYOffset + innerHeight;
   const imageReachHalfScreen = position >= offsetTop;
 
@@ -110,7 +107,7 @@ function parallaxChocolateImage({ pageYOffset, innerHeight }, { offsetTop, style
 
     from100To15 >= 0
       ? (style.backgroundPositionY = `${from100To15}%`) &
-      log({ from100To15, position, offsetTop, speed, style })
+        log({from100To15, position, offsetTop, speed, style})
       : {};
   }
 }
